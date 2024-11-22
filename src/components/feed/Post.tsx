@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { Comments } from "./";
+
+// components
+import Comments from "./Comments";
 
 const Post = () => {
   return (
