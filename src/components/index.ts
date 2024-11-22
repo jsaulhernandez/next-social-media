@@ -10,6 +10,8 @@ import Comments from "@/components/feed/Comments";
 import FriendRequests from "@/components/rightMenu/FriendRequests";
 import Ad from "@/components/Ad";
 import Birthdays from "@/components/rightMenu/Birthdays";
+import UserInfoCard from "@/components/rightMenu/UserInfoCard";
+import UserMediaCard from "@/components/rightMenu/UserMediaCard";
 
 export {
   Navbar,
@@ -24,4 +26,6 @@ export {
   FriendRequests,
   Ad,
   Birthdays,
+  UserInfoCard,
+  UserMediaCard,
 };

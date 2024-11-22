@@ -1,5 +1,5 @@
 export type RightMenuProps = {
-  userId: string;
+  userId?: string;
 };
 
 export type AdProps = {
