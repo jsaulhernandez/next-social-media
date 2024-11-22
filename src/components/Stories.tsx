@@ -7,7 +7,7 @@ const Stories = () => {
         {/* STORIES */}
         <div className="flex flex-col items-center gap-2 cursor-pointer">
           <Image
-            src="/noAvatar.png"
+            src="https://images.pexels.com/photos/13791392/pexels-photo-13791392.jpeg?auto=compress&cs=tinysrgb&w=600"
             alt="user image"
             width={80}
             height={80}
