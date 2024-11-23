@@ -1,6 +1,6 @@
-import { AdProps } from "@/data/types";
-
 import Image from "next/image";
+
+import { AdProps } from "@/data/types";
 
 const Ad = ({ size = "sm" }: AdProps) => {
   return (

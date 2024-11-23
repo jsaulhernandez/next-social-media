@@ -1,5 +1,6 @@
 import { RightMenuProps } from "@/data/types";
 
+// components
 import {
   Birthdays,
   Ad,
