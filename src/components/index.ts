@@ -12,6 +12,7 @@ import Ad from "@/components/Ad";
 import Birthdays from "@/components/rightMenu/Birthdays";
 import UserInfoCard from "@/components/rightMenu/UserInfoCard";
 import UserMediaCard from "@/components/rightMenu/UserMediaCard";
+import ProfileCard from "@/components/leftMenu/ProfileCard";
 
 export {
   Navbar,
@@ -28,4 +29,5 @@ export {
   Birthdays,
   UserInfoCard,
   UserMediaCard,
+  ProfileCard,
 };
