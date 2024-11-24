@@ -1,4 +1,12 @@
+"use client";
+
 import Image from "next/image";
+
+// components
+import { AddPostButton } from "./";
+
+// actions
+import { addPost } from "@/lib/actions";
 
 const AddPost = () => {
   return (
@@ -14,10 +22,11 @@ const AddPost = () => {
       {/* post */}
       <div className="flex-1">
         {/* text input */}
-        <div className="flex gap-4">
+        <form action={(data) => addPost(data, "")} className="flex gap-4">
           <textarea
             placeholder="What's on your mind?"
             className="flex-1 bg-slate-100 rounded-lg p-2 outline-none"
+            name="desc"
           ></textarea>
           <Image
             src="/emoji.png"
@@ -26,7 +35,9 @@ const AddPost = () => {
             height={20}
             className="w-5 h-5 cursor-pointer self-end"
           />
-        </div>
+
+          <AddPostButton />
+        </form>
         {/* post options */}
         <div className="flex items-center gap-4 mt-4 text-gray-400 flex-wrap">
           <div className="flex items-center gap-2 cursor-pointer">

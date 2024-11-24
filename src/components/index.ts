@@ -13,6 +13,7 @@ import Birthdays from "@/components/rightMenu/Birthdays";
 import UserInfoCard from "@/components/rightMenu/UserInfoCard";
 import UserMediaCard from "@/components/rightMenu/UserMediaCard";
 import ProfileCard from "@/components/leftMenu/ProfileCard";
+import AddPostButton from "@/components/AddPostButton";
 
 export {
   Navbar,
@@ -30,4 +31,5 @@ export {
   UserInfoCard,
   UserMediaCard,
   ProfileCard,
+  AddPostButton,
 };
