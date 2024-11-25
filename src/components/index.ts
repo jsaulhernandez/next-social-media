@@ -14,6 +14,7 @@ import UserInfoCard from "@/components/rightMenu/UserInfoCard";
 import UserMediaCard from "@/components/rightMenu/UserMediaCard";
 import ProfileCard from "@/components/leftMenu/ProfileCard";
 import AddPostButton from "@/components/AddPostButton";
+import UserInfoCardInteraction from "@/components/rightMenu/UserInfoCardInteraction";
 
 export {
   Navbar,
@@ -32,4 +33,5 @@ export {
   UserMediaCard,
   ProfileCard,
   AddPostButton,
+  UserInfoCardInteraction,
 };
