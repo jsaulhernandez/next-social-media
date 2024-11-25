@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const UserMediaCard = ({ userId }: { userId: string }) => {
+import { IUser } from "@/data/interfaces/user.interface";
+
+// actions
+import { getPostWithMediaByUserId } from "@/lib/actions";
+
+const UserMediaCard = async ({ user }: { user: IUser }) => {
+  const postsWithMedia = await getPostWithMediaByUserId(user.id);
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
       {/* top */}
@@ -13,16 +20,19 @@ const UserMediaCard = ({ userId }: { userId: string }) => {
       </div>
 
       {/* images */}
-
       <div className="flex gap-4 justify-between flex-wrap">
-        <div className="relative w-1/5 h-24">
-          <Image
-            src="https://images.pexels.com/photos/29473242/pexels-photo-29473242/free-photo-of-bright-tulip-bouquet-in-natural-light.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-            alt="post image"
-            fill
-            className="object-cover rounded-md"
-          />
-        </div>
+        {postsWithMedia.length
+          ? postsWithMedia.map((post) => (
+              <div className="relative w-1/5 h-24" key={post.id}>
+                <Image
+                  src={post.img!}
+                  alt="post image"
+                  fill
+                  className="object-cover rounded-md"
+                />
+              </div>
+            ))
+          : "No media found!"}
       </div>
     </div>
   );
