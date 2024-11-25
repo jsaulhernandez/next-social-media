@@ -15,6 +15,9 @@ import UserMediaCard from "@/components/rightMenu/UserMediaCard";
 import ProfileCard from "@/components/leftMenu/ProfileCard";
 import AddPostButton from "@/components/AddPostButton";
 import UserInfoCardInteraction from "@/components/rightMenu/UserInfoCardInteraction";
+import UpdateUser from "@/components/rightMenu/UpdateUser";
+import UpdateButton from "@/components/rightMenu/UpdateButton";
+import FriendRequestList from "@/components/rightMenu/FriendRequestList";
 
 export {
   Navbar,
@@ -34,4 +37,7 @@ export {
   ProfileCard,
   AddPostButton,
   UserInfoCardInteraction,
+  UpdateUser,
+  UpdateButton,
+  FriendRequestList,
 };

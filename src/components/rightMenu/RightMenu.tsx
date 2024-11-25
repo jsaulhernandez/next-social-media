@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { RightMenuProps } from "@/data/types";
 
 // components
@@ -9,13 +11,17 @@ import {
   UserMediaCard,
 } from "../";
 
-const RightMenu = ({ userId }: RightMenuProps) => {
+const RightMenu = ({ user }: RightMenuProps) => {
   return (
     <div className="flex flex-col gap-6">
-      {userId ? (
+      {user ? (
         <>
-          <UserInfoCard userId={userId} />
-          <UserMediaCard userId={userId} />
+          <Suspense fallback="Loading...">
+            <UserInfoCard user={user} />
+          </Suspense>
+          <Suspense fallback="Loading...">
+            <UserMediaCard user={user} />
+          </Suspense>
         </>
       ) : null}
 
