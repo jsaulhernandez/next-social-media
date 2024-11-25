@@ -5,6 +5,9 @@ import prisma from "./client";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
+// interfaces
+import { IUser } from "@/data/interfaces/user.interface";
+
 export const addPost = async (formData: FormData, img: string) => {
   const desc = formData.get("desc") as string;
 
@@ -34,4 +37,19 @@ export const addPost = async (formData: FormData, img: string) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const getUserInfo = async (): Promise<IUser | null> => {
+  const { userId } = auth();
+
+  if (!userId) return null;
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+    include: { followers: true },
+  });
+
+  return user as IUser;
 };

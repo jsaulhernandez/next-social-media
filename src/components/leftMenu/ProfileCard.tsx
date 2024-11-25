@@ -1,17 +1,24 @@
 import Image from "next/image";
+import Link from "next/link";
 
-const ProfileCard = () => {
+// actions
+import { getUserInfo } from "@/lib/actions";
+
+const ProfileCard = async () => {
+  const userInfo = await getUserInfo();
+  if (!userInfo) return null;
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-6">
       <div className="h-20 relative">
         <Image
-          src="https://images.pexels.com/photos/256152/pexels-photo-256152.jpeg?auto=compress&cs=tinysrgb&w=600"
+          src={userInfo?.cover ?? "/noCover.png"}
           alt="cover image"
           fill
           className="rounded-md object-cover"
         />
         <Image
-          src="https://images.pexels.com/photos/975012/pexels-photo-975012.jpeg?auto=compress&cs=tinysrgb&w=600"
+          src={userInfo?.avatar ?? "/noAvatar.png"}
           alt="profile image"
           width={48}
           height={48}
@@ -20,7 +27,11 @@ const ProfileCard = () => {
       </div>
 
       <div className="flex flex-col gap-2 items-center">
-        <span className="font-semibold">Sony</span>
+        <span className="font-semibold">
+          {userInfo?.name && userInfo?.surname
+            ? userInfo.name + " " + userInfo.surname
+            : userInfo?.username}
+        </span>
 
         <div className="flex items-center gap-4">
           <div className="flex">
@@ -47,12 +58,16 @@ const ProfileCard = () => {
             />
           </div>
 
-          <span className="text-sm text-gray-500">500 Followers</span>
+          <span className="text-sm text-gray-500">
+            {userInfo?.followers.length ?? 0} Followers
+          </span>
         </div>
 
-        <button className="bg-blue-500 text-white text-xs p-2 rounded-md">
-          My Profile
-        </button>
+        <Link href={`/profile/${userInfo!.username}`}>
+          <button className="bg-blue-500 text-white text-xs p-2 rounded-md">
+            My Profile
+          </button>
+        </Link>
       </div>
     </div>
   );
