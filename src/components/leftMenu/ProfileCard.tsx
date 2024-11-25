@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 // actions
-import { getUserInfo } from "@/lib/actions";
+import { getUserInfoById } from "@/lib/actions";
 
 const ProfileCard = async () => {
-  const userInfo = await getUserInfo();
+  const userInfo = await getUserInfoById();
   if (!userInfo) return null;
 
   return (
