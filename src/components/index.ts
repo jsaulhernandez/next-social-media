@@ -18,6 +18,9 @@ import UserInfoCardInteraction from "@/components/rightMenu/UserInfoCardInteract
 import UpdateUser from "@/components/rightMenu/UpdateUser";
 import UpdateButton from "@/components/rightMenu/UpdateButton";
 import FriendRequestList from "@/components/rightMenu/FriendRequestList";
+import PostInteraction from "@/components/feed/PostInteraction";
+import PostInfo from "@/components/feed/PostInfo";
+import CommentList from "@/components/feed/CommentList";
 
 export {
   Navbar,
@@ -40,4 +43,7 @@ export {
   UpdateUser,
   UpdateButton,
   FriendRequestList,
+  PostInteraction,
+  PostInfo,
+  CommentList,
 };

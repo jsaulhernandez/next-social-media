@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { IUser } from "@/data/interfaces/user.interface";
 import { IPost } from "@/data/interfaces/post.interface";
 import { IFollowRequest } from "@/data/interfaces/follow-request.interface";
+import { IComment } from "@/data/interfaces/comment.interface";
 
 export const getUserClerkId = async () => {
   const { userId } = auth();
@@ -212,8 +213,8 @@ export const switchFollow = async (userId: string) => {
         });
       }
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error("[Error]", error);
     throw new Error("Something went wrong!");
   }
 };
@@ -245,8 +246,8 @@ export const switchBlock = async (userId: string) => {
         },
       });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error("[Error]", error);
     throw new Error("Something went wrong!");
   }
 };
@@ -270,7 +271,7 @@ export const getPostWithMediaByUserId = async (
 
     return result as IPost[];
   } catch (error) {
-    console.log("[Error]", error);
+    console.error("[Error]", error);
 
     return [];
   }
@@ -317,8 +318,8 @@ export const updateProfile = async (
       data: validatedFields.data,
     });
     return { success: true, error: false };
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error("[Error]", error);
     return { success: false, error: true };
   }
 };
@@ -340,7 +341,7 @@ export const getFollowRequest = async (): Promise<IFollowRequest[]> => {
 
     return result as IFollowRequest[];
   } catch (error) {
-    console.log("[Error]", error);
+    console.error("[Error]", error);
     return [];
   }
 };
@@ -372,8 +373,8 @@ export const acceptFollowRequest = async (userId: string) => {
         },
       });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error("[Error]", error);
     throw new Error("Something went wrong!");
   }
 };
@@ -398,8 +399,179 @@ export const declineFollowRequest = async (userId: string) => {
         },
       });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error("[Error]", error);
+    throw new Error("Something went wrong!");
+  }
+};
+
+export const getPostByUsernameOrId = async (
+  username?: string
+): Promise<IPost[]> => {
+  try {
+    const userId = await getUserClerkId();
+
+    if (username) {
+      const result = await prisma.post.findMany({
+        where: {
+          user: {
+            username: username,
+          },
+        },
+        include: {
+          user: true,
+          likes: {
+            select: {
+              userId: true,
+            },
+          },
+          comments: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return result as IPost[];
+    }
+
+    if (!username && userId) {
+      const following = await prisma.follower.findMany({
+        where: {
+          followerId: userId,
+        },
+        select: {
+          followingId: true,
+        },
+      });
+
+      const followingIds = following.map((f) => f.followingId);
+      const ids = [userId, ...followingIds];
+
+      const result = await prisma.post.findMany({
+        where: {
+          userId: {
+            in: ids,
+          },
+        },
+        include: {
+          user: true,
+          likes: {
+            select: {
+              userId: true,
+            },
+          },
+          comments: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return result as IPost[];
+    }
+
+    return [];
+  } catch (error) {
+    console.error("[Error]", error);
+    return [];
+  }
+};
+
+export const deletePost = async (postId: number): Promise<void> => {
+  const userId = await getUserClerkId();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    await prisma.post.delete({
+      where: {
+        id: postId,
+        userId,
+      },
+    });
+    revalidatePath("/");
+  } catch (error) {
+    console.error("[Error]", error);
+  }
+};
+
+export const switchLike = async (postId: number): Promise<void> => {
+  const userId = await getUserClerkId();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        postId,
+        userId,
+      },
+    });
+
+    if (existingLike) {
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+    } else {
+      await prisma.like.create({
+        data: {
+          postId,
+          userId,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("[Error]", error);
+    throw new Error("Something went wrong");
+  }
+};
+
+export const getCommentsByPostId = async (
+  postId: number
+): Promise<IComment[]> => {
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        postId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return comments as IComment[];
+  } catch (error) {
+    console.log("[Error]", error);
+    return [];
+  }
+};
+
+export const addComment = async (
+  postId: number,
+  desc: string
+): Promise<IComment> => {
+  const userId = await getUserClerkId();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    const created = await prisma.comment.create({
+      data: {
+        desc,
+        userId,
+        postId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return created as IComment;
+  } catch (error) {
+    console.log("[Error]", error);
     throw new Error("Something went wrong!");
   }
 };

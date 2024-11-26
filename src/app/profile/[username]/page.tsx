@@ -69,7 +69,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
             </div>
           </div>
 
-          <Feed />
+          <Feed username={params.username} />
         </div>
       </div>
 

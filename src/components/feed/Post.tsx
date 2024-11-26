@@ -1,93 +1,66 @@
 import Image from "next/image";
+import { Suspense } from "react";
 
 // components
-import Comments from "./Comments";
+import { Comments, PostInfo, PostInteraction } from "../";
+// actions
+import { getUserClerkId } from "@/lib/actions";
+// interfaces
+import { IPost } from "@/data/interfaces/post.interface";
 
-const Post = () => {
+const Post = async ({ post }: { post: IPost }) => {
+  const userId = await getUserClerkId();
+
   return (
     <div className="flex flex-col gap-4">
       {/* user info */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Image
-            src="https://images.pexels.com/photos/13791392/pexels-photo-13791392.jpeg?auto=compress&cs=tinysrgb&w=600"
+            src={post.user.avatar || "/noAvatar.png"}
             width={40}
             height={40}
             alt="user image"
             className="w-10 h-10 rounded-full"
           />
-          <span className="font-medium">Sony</span>
+          <span className="font-medium">
+            {post.user.name && post.user.surname
+              ? post.user.name + " " + post.user.surname
+              : post.user.username}
+          </span>
         </div>
 
-        <Image src="/more.png" width={16} height={16} alt="icon" />
+        {userId === post.user.id && <PostInfo postId={post.id} />}
       </div>
 
       {/* description */}
       <div className="flex flex-col gap-4">
-        <div className="w-full min-h-96 relative">
-          <Image
-            src="https://images.pexels.com/photos/28921096/pexels-photo-28921096/free-photo-of-colorful-architecture-in-guanajuato-mexico.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-            fill
-            alt="post image"
-            className="object-cover rounded-md"
-          />
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sed autem
-          tempora minus culpa similique magnam maxime. Incidunt.
-        </p>
+        {post.img && (
+          <div className="w-full min-h-96 relative">
+            <Image
+              src={post.img}
+              fill
+              alt="post image"
+              className="object-cover rounded-md"
+            />
+          </div>
+        )}
+        <p>{post.desc}</p>
       </div>
 
       {/* interaction */}
-      <div className="flex items-center justify-between text-sm my-4">
-        <div className="flex gap-6">
-          {/* likes */}
-          <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-xl">
-            <Image
-              src="/like.png"
-              width={16}
-              height={16}
-              alt="icon"
-              className="cursor-pointer"
-            />
-            <span className="text-gray-300">|</span>
-            <span className="text-gray-500">
-              123&nbsp;<span className="hidden md:inline">Likes</span>
-            </span>
-          </div>
-          {/* comments */}
-          <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-xl">
-            <Image
-              src="/comment.png"
-              width={16}
-              height={16}
-              alt="icon"
-              className="cursor-pointer"
-            />
-            <span className="text-gray-300">|</span>
-            <span className="text-gray-500">
-              123&nbsp;<span className="hidden md:inline">Comments</span>
-            </span>
-          </div>
-        </div>
+      <Suspense fallback="Loading...">
+        <PostInteraction
+          postId={post.id}
+          likes={post.likes.map((like) => like.userId)}
+          commentNumber={post.comments.length}
+        />
+      </Suspense>
 
-        {/* share */}
-        <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-xl">
-          <Image
-            src="/share.png"
-            width={16}
-            height={16}
-            alt="icon"
-            className="cursor-pointer"
-          />
-          <span className="text-gray-300">|</span>
-          <span className="text-gray-500">
-            123&nbsp;<span className="hidden md:inline">Shares</span>
-          </span>
-        </div>
-      </div>
-
-      <Comments />
+      {/* comments */}
+      <Suspense fallback="Loading...">
+        <Comments postId={post.id} />
+      </Suspense>
     </div>
   );
 };

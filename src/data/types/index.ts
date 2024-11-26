@@ -1,3 +1,4 @@
+import { IComment } from "../interfaces/comment.interface";
 import { IUser } from "../interfaces/user.interface";
 
 export type RightMenuProps = {
@@ -14,3 +15,11 @@ export type UserInfoCardInteractionProps = {
   isFollowing: boolean;
   isFollowingSent: boolean;
 };
+
+export type PostInteractionProps = {
+  postId: number;
+  likes: string[];
+  commentNumber: number;
+};
+
+export type CommentListProps = { comments: IComment[]; postId: number };
