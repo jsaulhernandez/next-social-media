@@ -1,4 +1,5 @@
 import { IComment } from "../interfaces/comment.interface";
+import { IStory } from "../interfaces/story.interface";
 import { IUser } from "../interfaces/user.interface";
 
 export type RightMenuProps = {
@@ -23,3 +24,5 @@ export type PostInteractionProps = {
 };
 
 export type CommentListProps = { comments: IComment[]; postId: number };
+
+export type StoryListProps = { stories: IStory[]; userId: string };

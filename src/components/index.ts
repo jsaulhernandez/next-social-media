@@ -21,6 +21,7 @@ import FriendRequestList from "@/components/rightMenu/FriendRequestList";
 import PostInteraction from "@/components/feed/PostInteraction";
 import PostInfo from "@/components/feed/PostInfo";
 import CommentList from "@/components/feed/CommentList";
+import StoryList from "@/components/StoryList";
 
 export {
   Navbar,
@@ -46,4 +47,5 @@ export {
   PostInteraction,
   PostInfo,
   CommentList,
+  StoryList,
 };

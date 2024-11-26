@@ -10,6 +10,7 @@ import { IUser } from "@/data/interfaces/user.interface";
 import { IPost } from "@/data/interfaces/post.interface";
 import { IFollowRequest } from "@/data/interfaces/follow-request.interface";
 import { IComment } from "@/data/interfaces/comment.interface";
+import { IStory } from "@/data/interfaces/story.interface";
 
 export const getUserClerkId = async () => {
   const { userId } = auth();
@@ -572,6 +573,81 @@ export const addComment = async (
     return created as IComment;
   } catch (error) {
     console.log("[Error]", error);
+    throw new Error("Something went wrong!");
+  }
+};
+
+export const getStoriesByCurrentUserId = async (): Promise<IStory[] | null> => {
+  try {
+    const userId = await getUserClerkId();
+    if (!userId) return null;
+
+    const result = await prisma.story.findMany({
+      where: {
+        expiresAt: {
+          gt: new Date(),
+        },
+        OR: [
+          {
+            user: {
+              followers: {
+                some: {
+                  followerId: userId,
+                },
+              },
+            },
+          },
+          {
+            userId: userId,
+          },
+        ],
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return result as IStory[];
+  } catch (error) {
+    console.log("[Error]", error);
+    return [];
+  }
+};
+
+export const addStory = async (img: string): Promise<IStory> => {
+  const userId = await getUserClerkId();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    const existingStory = await prisma.story.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (existingStory) {
+      await prisma.story.delete({
+        where: {
+          id: existingStory.id,
+        },
+      });
+    }
+    const created = await prisma.story.create({
+      data: {
+        userId,
+        img,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return created as IStory;
+  } catch (err) {
+    console.log(err);
+
     throw new Error("Something went wrong!");
   }
 };
